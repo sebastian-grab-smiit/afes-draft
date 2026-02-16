@@ -57,8 +57,8 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
   
-  /* Classic, professional font for enterprise credibility */
-  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  /* Global font token mapped to next/font variable */
+  --font-sans: var(--font-montserrat), "Montserrat", Arial, "Helvetica Neue", Helvetica, sans-serif;
   
   /* Enterprise-appropriate radius (max 8px) */
   --radius-sm: calc(var(--radius) - 4px);

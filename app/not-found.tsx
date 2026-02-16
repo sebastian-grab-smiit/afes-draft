@@ -23,7 +23,7 @@ export default function NotFound() {
             <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-14 xl:gap-20 mb-10">
               <div className="flex h-full max-w-[42rem] flex-col justify-center">
                 <FadeIn>
-                  <h1 className="text-balance text-[clamp(2.25rem,5vw,4.5rem)] font-bold leading-tight tracking-tight text-foreground">
+                  <h1 className="text-balance text-[clamp(2rem,5vw,4rem)] font-bold leading-tight tracking-tight text-foreground">
                     Page not found. <br className="hidden lg:block" />
                     <span className="text-muted-foreground">The link may be outdated.</span> <br className="hidden lg:block" />
                     <span className="text-primary">Let’s get you back on track.</span>

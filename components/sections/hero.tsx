@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/motion-wrapper";
 import { GlobeStory } from "@/components/hero/globe-story";
-import { ProblemPain } from "@/components/sections/problem-pain";
+import { ProblemPain } from "@/components/hero/problem-pain";
 
 function clamp01(value: number) {
   return Math.min(1, Math.max(0, value));
@@ -44,7 +44,7 @@ export function Hero({
   ),
   subline = "Accelerate cycle times, ensure full transparency, and maintain consistent reporting across all jurisdictions.",
   primaryCta = { text: "Request Consultation", href: "#contact" },
-  secondaryCta = { text: "Report a Claim", href: "https://portal.afes-iis.com" },
+  secondaryCta = { text: "Why AFES", href: "/#how-we-work" },
   backgroundImage,
 }: HeroProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -83,9 +83,9 @@ export function Hero({
     const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: "top top+=64",
-      end: () => (window.innerWidth >= 1024 ? "+=320%" : "+=260%"),
+      end: () => (window.innerWidth >= 1024 ? "+=90%" : "+=80%"),
       pin: true,
-      scrub: 1.6,
+      scrub: 0.6,
       anticipatePin: 1,
       onUpdate: (self) => {
         progressTargetRef.current = self.progress;
@@ -136,7 +136,7 @@ export function Hero({
       />
 
       <div className="relative z-10 mx-auto flex h-full w-full max-w-[94rem] items-center px-4 py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-6">
-        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-14 xl:gap-20 mb-10">
+        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-18 mb-10">
           {/* Left Column: Content */}
           <div
             className="flex h-full max-w-[42rem] flex-col justify-center"
@@ -157,7 +157,7 @@ export function Hero({
                   transition: "opacity 220ms ease-out, transform 300ms ease-out",
                 }}
               >
-                <h1 className="text-balance text-[clamp(2.25rem,5vw,4.5rem)] font-bold leading-tight tracking-tight text-foreground">
+                <h1 className="text-balance text-[clamp(2rem,5vw,4rem)] font-bold leading-tight tracking-tight text-foreground">
                   {headline}
                 </h1>
 

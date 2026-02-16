@@ -14,18 +14,18 @@ const DEFAULT_CASES = [
     approach: "Immediate on-site investigation, coordination with local authorities, and centralized communication with 40+ claimants.",
     outcome: "Settled 20% below initial reserve with 100% compliance to local regulations.",
   },
-  {
-    title: "Fleet Liability Program",
-    situation: "Pan-European logistics fleet facing rising claims costs and fragmented handling across 12 countries.",
-    approach: "Implemented centralized triage, uniform SLAs, and a single digital reporting dashboard.",
-    outcome: "40% reduction in cycle time and 15% decrease in overall claims spend within 12 months.",
-  },
-  {
-    title: "Cross-Border Recourse",
-    situation: "Major insurer struggling with low recovery rates on accidents caused by foreign vehicles.",
-    approach: "Direct legal action in 5 jurisdictions using specialized local partner network.",
-    outcome: "Full recovery of €1.2M in stalled claims and established a scalable recovery workflow.",
-  },
+  // {
+  //   title: "Fleet Liability Program",
+  //   situation: "Pan-European logistics fleet facing rising claims costs and fragmented handling across 12 countries.",
+  //   approach: "Implemented centralized triage, uniform SLAs, and a single digital reporting dashboard.",
+  //   outcome: "40% reduction in cycle time and 15% decrease in overall claims spend within 12 months.",
+  // },
+  // {
+  //   title: "Cross-Border Recourse",
+  //   situation: "Major insurer struggling with low recovery rates on accidents caused by foreign vehicles.",
+  //   approach: "Direct legal action in 5 jurisdictions using specialized local partner network.",
+  //   outcome: "Full recovery of €1.2M in stalled claims and established a scalable recovery workflow.",
+  // },
 ];
 
 interface CaseStudy {
@@ -76,18 +76,18 @@ export function Proof({
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
                     </CardHeader>
-                    <CardContent className="grid gap-4 text-sm sm:grid-cols-3">
+                    <CardContent className="grid gap-4 text-md sm:grid-cols-3">
                       <div>
                         <span className="block font-medium text-muted-foreground">Situation</span>
-                        <span className="mt-1 block text-foreground">{item.situation}</span>
+                        <span className="text-sm mt-1 block text-foreground">{item.situation}</span>
                       </div>
                       <div>
                         <span className="block font-medium text-muted-foreground">Approach</span>
-                        <span className="mt-1 block text-foreground">{item.approach}</span>
+                        <span className="text-sm mt-1 block text-foreground">{item.approach}</span>
                       </div>
                       <div>
                         <span className="block font-medium text-primary">Outcome</span>
-                        <span className="mt-1 block font-medium text-foreground">{item.outcome}</span>
+                        <span className="text-sm mt-1 block font-medium text-foreground">{item.outcome}</span>
                       </div>
                     </CardContent>
                   </Card>

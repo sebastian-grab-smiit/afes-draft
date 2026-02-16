@@ -30,6 +30,13 @@ interface GlobeStoryProps {
   progress: number;
 }
 
+type GlobeViewState = "overview" | "focus";
+
+const OVERVIEW_POV = { lat: 18, lng: 0, altitude: 2.05 } as const;
+const FOCUS_POV = { lat: 50, lng: 10, altitude: 0.72 } as const;
+const ENTER_FOCUS_THRESHOLD = 0.16;
+const LEAVE_FOCUS_THRESHOLD = 0.14;
+
 function clamp01(value: number) {
   return Math.min(1, Math.max(0, value));
 }
@@ -49,16 +56,16 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
   const isScrollControlledRef = useRef(false);
   const idleLngRef = useRef(0);
   const idleLastTsRef = useRef(0);
-  const markerRevealRef = useRef({ value: 0 });
-  const prevProgressRef = useRef(0);
-  const scrollStartPovRef = useRef<{ lat: number; lng: number; altitude: number } | null>(null);
-  const markerRevealQuickToRef = useRef<((value: number) => gsap.core.Tween) | null>(null);
-  const markerRevealCommittedRef = useRef(0);
+  const viewStateRef = useRef<GlobeViewState>("overview");
+  const pendingViewStateRef = useRef<GlobeViewState | null>(null);
+  const transitionTweenRef = useRef<gsap.core.Tween | null>(null);
+  const viewBlendRef = useRef({ value: 0 });
+  const viewBlendCommittedRef = useRef(0);
 
   const [isMounted, setIsMounted] = useState(false);
   const [isGlobeReady, setIsGlobeReady] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 520, height: 520 });
-  const [markerReveal, setMarkerReveal] = useState(0);
+  const [viewBlend, setViewBlend] = useState(0);
   const [countriesGeoJson, setCountriesGeoJson] = useState<GeoJSON.FeatureCollection | null>(null);
 
   const smoothedProgress = useMemo(() => {
@@ -75,6 +82,11 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
     return material;
   }, []);
 
+  const markerReveal = useMemo(() => {
+    const t = clamp01((viewBlend - 0.82) / 0.18);
+    return easeInOutCubic(t);
+  }, [viewBlend]);
+
   const points = useMemo<GlobePoint[]>(() => {
     if (markerReveal <= 0.03) return [];
 
@@ -86,8 +98,8 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
   }, [markerReveal]);
 
   const introArcs = useMemo<GlobeArc[]>(() => {
-    const revealFactor = clamp01((0.08 - smoothedProgress) / 0.08);
-    if (revealFactor <= 0) return [];
+    const revealFactor = clamp01((0.42 - viewBlend) / 0.42);
+    if (revealFactor <= 0.02) return [];
 
     const alpha = 0.9 * revealFactor;
     const total = 8;
@@ -110,7 +122,7 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
         dashOffset: (index * 0.37) % 1,
       };
     });
-  }, [smoothedProgress]);
+  }, [viewBlend]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -159,79 +171,95 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) {
-      globeRef.current?.pointOfView({ lat: 44, lng: 10, altitude: 0.98 }, 0);
+      viewStateRef.current = "focus";
+      viewBlendRef.current.value = 1;
+      viewBlendCommittedRef.current = 1;
+      setViewBlend(1);
+      globeRef.current?.pointOfView(FOCUS_POV, 0);
       isScrollControlledRef.current = true;
       return;
     }
 
+    const resolveTargetState = (clamped: number, current: GlobeViewState): GlobeViewState => {
+      if (current === "overview") {
+        return clamped >= ENTER_FOCUS_THRESHOLD ? "focus" : "overview";
+      }
+
+      return clamped <= LEAVE_FOCUS_THRESHOLD ? "overview" : "focus";
+    };
+
+    const applyBlend = () => {
+      const globe = globeRef.current;
+      const blend = clamp01(viewBlendRef.current.value);
+      if (globe) {
+        globe.pointOfView(
+          {
+            lat: lerp(OVERVIEW_POV.lat, FOCUS_POV.lat, blend),
+            lng: lerp(OVERVIEW_POV.lng, FOCUS_POV.lng, blend),
+            altitude: lerp(OVERVIEW_POV.altitude, FOCUS_POV.altitude, blend),
+          },
+          0
+        );
+      }
+
+      const quantized = Math.round(blend * 200) / 200;
+      if (quantized === viewBlendCommittedRef.current) return;
+      viewBlendCommittedRef.current = quantized;
+      setViewBlend(quantized);
+    };
+
+    const startTransition = (targetState: GlobeViewState) => {
+      const targetBlend = targetState === "focus" ? 1 : 0;
+
+      transitionTweenRef.current?.kill();
+      isScrollControlledRef.current = true;
+
+      transitionTweenRef.current = gsap.to(viewBlendRef.current, {
+        value: targetBlend,
+        duration: 0.68,
+        ease: "power2.inOut",
+        overwrite: true,
+        onUpdate: applyBlend,
+        onComplete: () => {
+          transitionTweenRef.current = null;
+          viewStateRef.current = targetState;
+
+          const pending = pendingViewStateRef.current;
+          pendingViewStateRef.current = null;
+
+          if (pending && pending !== viewStateRef.current) {
+            startTransition(pending);
+            return;
+          }
+
+          if (viewStateRef.current === "overview") {
+            const globe = globeRef.current;
+            if (globe) {
+              idleLngRef.current = globe.pointOfView().lng;
+            }
+            isScrollControlledRef.current = false;
+            return;
+          }
+
+          isScrollControlledRef.current = true;
+        },
+      });
+    };
+
     const clampedProgress = smoothedProgress;
-    const hasStartedScroll = clampedProgress > 0.01;
-    isScrollControlledRef.current = hasStartedScroll;
+    const desiredState = resolveTargetState(clampedProgress, viewStateRef.current);
 
-    const globe = globeRef.current;
-    if (!globe) return;
-
-    if (!hasStartedScroll) {
-      scrollStartPovRef.current = null;
+    if (desiredState === viewStateRef.current && !transitionTweenRef.current) {
       return;
     }
 
-    if (!scrollStartPovRef.current) {
-      const current = globe.pointOfView();
-      scrollStartPovRef.current = {
-        lat: current.lat,
-        lng: current.lng,
-        altitude: current.altitude,
-      };
+    if (transitionTweenRef.current) {
+      pendingViewStateRef.current = desiredState;
+      return;
     }
 
-    const startPov = scrollStartPovRef.current;
-    if (!startPov) return;
-
-    const zoomT = clamp01((clampedProgress - 0.01) / 0.68);
-    const smoothT = easeInOutCubic(zoomT);
-
-    globe.pointOfView(
-      {
-        lat: lerp(startPov.lat, 50, smoothT),
-        lng: lerp(startPov.lng, 10, smoothT),
-        altitude: lerp(startPov.altitude, 0.72, smoothT),
-      },
-      0
-    );
+    startTransition(desiredState);
   }, [isMounted, smoothedProgress]);
-
-  useEffect(() => {
-    markerRevealQuickToRef.current = gsap.quickTo(markerRevealRef.current, "value", {
-      duration: 0.75,
-      ease: "sine.out",
-      overwrite: true,
-      onUpdate: () => {
-        const quantized = Math.round(markerRevealRef.current.value * 120) / 120;
-        if (quantized === markerRevealCommittedRef.current) return;
-        markerRevealCommittedRef.current = quantized;
-        setMarkerReveal(quantized);
-      },
-    });
-
-    return () => {
-      markerRevealQuickToRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const clampedProgress = smoothedProgress;
-    const prev = prevProgressRef.current;
-    const scrollingUp = clampedProgress < prev;
-    prevProgressRef.current = clampedProgress;
-
-    const revealT = scrollingUp
-      ? clamp01((clampedProgress - 0.74) / 0.14)
-      : clamp01((clampedProgress - 0.62) / 0.22);
-    const target = easeInOutCubic(revealT);
-
-    markerRevealQuickToRef.current?.(target);
-  }, [smoothedProgress]);
 
   useEffect(() => {
     const animateIdle = (ts: number) => {
@@ -268,7 +296,7 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
     controls.autoRotate = false;
     controls.enableZoom = false;
 
-    globe.pointOfView({ lat: 18, lng: 0, altitude: 2.05 }, 0);
+    globe.pointOfView(OVERVIEW_POV, 0);
   }, [isGlobeReady]);
 
   useEffect(() => {

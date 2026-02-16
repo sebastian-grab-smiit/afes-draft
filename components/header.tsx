@@ -17,6 +17,8 @@ import {
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [targetGroupsOpen, setTargetGroupsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,47 +53,57 @@ export function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           {/* Services Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-foreground/75 transition-colors hover:text-foreground focus:outline-none">
-              Services <ChevronDown className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              {SERVICES.map((service) => (
-                <DropdownMenuItem key={service.title} asChild>
-                  <Link href="#services" className="w-full cursor-pointer">
-                    {service.title}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
+          >
+            <DropdownMenu open={servicesOpen} onOpenChange={setServicesOpen}>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-normal text-foreground/80 transition-colors hover:text-foreground focus:outline-none">
+                Services <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                {SERVICES.map((service) => (
+                  <DropdownMenuItem key={service.title} asChild>
+                    <Link href="#services" className="w-full cursor-pointer">
+                      {service.title}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
           {/* For Whom Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-foreground/75 transition-colors hover:text-foreground focus:outline-none">
-              For Whom <ChevronDown className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              {TARGET_GROUPS.map((group) => (
-                <DropdownMenuItem key={group.title} asChild>
-                  <Link href={group.href} className="w-full cursor-pointer">
-                    {group.title}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div
+            onMouseEnter={() => setTargetGroupsOpen(true)}
+            onMouseLeave={() => setTargetGroupsOpen(false)}
+          >
+            <DropdownMenu open={targetGroupsOpen} onOpenChange={setTargetGroupsOpen}>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-normal text-foreground/80 transition-colors hover:text-foreground focus:outline-none">
+                For Whom <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                {TARGET_GROUPS.map((group) => (
+                  <DropdownMenuItem key={group.title} asChild>
+                    <Link href={group.href} className="w-full cursor-pointer">
+                      {group.title}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
           <Link
             href="/how-we-work"
-            className="text-sm font-medium text-foreground/75 transition-colors hover:text-foreground"
+            className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
           >
             How We Work
           </Link>
 
           <Link
             href="/case-studies"
-            className="text-sm font-medium text-foreground/75 transition-colors hover:text-foreground"
+            className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
           >
             Case Studies
           </Link>
@@ -100,7 +112,7 @@ export function Header() {
         {/* Desktop CTA */}
         <div className="hidden lg:flex">
           <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link href="#contact">Report</Link>
+            <Link href="#contact">Report a claim</Link>
           </Button>
         </div>
 
@@ -126,7 +138,7 @@ export function Header() {
                     key={service.title}
                     href="#services"
                     onClick={() => setMobileOpen(false)}
-                    className="text-sm text-muted-foreground hover:text-foreground"
+                    className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
                   >
                     {service.title}
                   </Link>
@@ -142,7 +154,7 @@ export function Header() {
                     key={group.title}
                     href={group.href}
                     onClick={() => setMobileOpen(false)}
-                    className="text-sm text-muted-foreground hover:text-foreground"
+                    className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
                   >
                     {group.title}
                   </Link>
@@ -153,7 +165,7 @@ export function Header() {
             <Link
               href="/how-we-work"
               onClick={() => setMobileOpen(false)}
-              className="font-medium text-foreground hover:text-primary"
+              className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
             >
               How We Work
             </Link>
@@ -161,7 +173,7 @@ export function Header() {
             <Link
               href="/case-studies"
               onClick={() => setMobileOpen(false)}
-              className="font-medium text-foreground hover:text-primary"
+              className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
             >
               Case Studies
             </Link>
@@ -169,7 +181,7 @@ export function Header() {
             <div className="pt-4">
               <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                 <Link href="#contact" onClick={() => setMobileOpen(false)}>
-                  Report
+                  Report a claim
                 </Link>
               </Button>
             </div>

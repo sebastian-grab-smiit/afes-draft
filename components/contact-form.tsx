@@ -90,7 +90,7 @@ export function ContactForm({ className }: ContactFormProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white" size="lg">
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
             Request Consultation
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
