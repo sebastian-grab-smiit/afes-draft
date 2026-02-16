@@ -53,12 +53,12 @@ export function Hero({
   const progressRafRef = useRef<number | null>(null);
   const progressCommittedRef = useRef(0);
 
-  const exitStart = 0.76;
-  const exitEnd = 0.94;
+  const exitStart = 0.84;
+  const exitEnd = 0.98;
   const exitTransition = clamp01((storyProgress - exitStart) / (exitEnd - exitStart));
 
-  const revealStart = 0.8;
-  const revealEnd = 0.98;
+  const revealStart = 0.9;
+  const revealEnd = 1;
   const revealTransition = clamp01((storyProgress - revealStart) / (revealEnd - revealStart));
 
   const leftExitTranslateX = -220 * exitTransition;

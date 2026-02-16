@@ -31,6 +31,7 @@ interface GlobeStoryProps {
 }
 
 type GlobeViewState = "overview" | "focus";
+type CameraPov = { lat: number; lng: number; altitude: number };
 
 const OVERVIEW_POV = { lat: 18, lng: 0, altitude: 2.05 } as const;
 const FOCUS_POV = { lat: 50, lng: 10, altitude: 0.72 } as const;
@@ -61,11 +62,17 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
   const transitionTweenRef = useRef<gsap.core.Tween | null>(null);
   const viewBlendRef = useRef({ value: 0 });
   const viewBlendCommittedRef = useRef(0);
+  const cameraTweenRef = useRef({ value: 0 });
+  const transitionFromPovRef = useRef<CameraPov>({ ...OVERVIEW_POV });
+  const transitionToPovRef = useRef<CameraPov>({ ...FOCUS_POV });
+  const transitionFromBlendRef = useRef(0);
+  const transitionToBlendRef = useRef(1);
 
   const [isMounted, setIsMounted] = useState(false);
   const [isGlobeReady, setIsGlobeReady] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 520, height: 520 });
   const [viewBlend, setViewBlend] = useState(0);
+  const [showLocations, setShowLocations] = useState(false);
   const [countriesGeoJson, setCountriesGeoJson] = useState<GeoJSON.FeatureCollection | null>(null);
 
   const smoothedProgress = useMemo(() => {
@@ -82,20 +89,15 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
     return material;
   }, []);
 
-  const markerReveal = useMemo(() => {
-    const t = clamp01((viewBlend - 0.82) / 0.18);
-    return easeInOutCubic(t);
-  }, [viewBlend]);
-
   const points = useMemo<GlobePoint[]>(() => {
-    if (markerReveal <= 0.03) return [];
+    if (!showLocations) return [];
 
     return AFES_LOCATIONS.map((location) => ({
       ...location,
-      pinScale: 0.35 + markerReveal * 0.85,
+      pinScale: 1.2,
       pinOpacity: 1,
     }));
-  }, [markerReveal]);
+  }, [showLocations]);
 
   const introArcs = useMemo<GlobeArc[]>(() => {
     const revealFactor = clamp01((0.42 - viewBlend) / 0.42);
@@ -175,6 +177,7 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
       viewBlendRef.current.value = 1;
       viewBlendCommittedRef.current = 1;
       setViewBlend(1);
+      setShowLocations(true);
       globeRef.current?.pointOfView(FOCUS_POV, 0);
       isScrollControlledRef.current = true;
       return;
@@ -190,17 +193,23 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
 
     const applyBlend = () => {
       const globe = globeRef.current;
-      const blend = clamp01(viewBlendRef.current.value);
+      const cameraT = clamp01(cameraTweenRef.current.value);
       if (globe) {
+        const from = transitionFromPovRef.current;
+        const to = transitionToPovRef.current;
+
         globe.pointOfView(
           {
-            lat: lerp(OVERVIEW_POV.lat, FOCUS_POV.lat, blend),
-            lng: lerp(OVERVIEW_POV.lng, FOCUS_POV.lng, blend),
-            altitude: lerp(OVERVIEW_POV.altitude, FOCUS_POV.altitude, blend),
+            lat: lerp(from.lat, to.lat, cameraT),
+            lng: lerp(from.lng, to.lng, cameraT),
+            altitude: lerp(from.altitude, to.altitude, cameraT),
           },
           0
         );
       }
+
+      const blend = clamp01(lerp(transitionFromBlendRef.current, transitionToBlendRef.current, cameraT));
+      viewBlendRef.current.value = blend;
 
       const quantized = Math.round(blend * 200) / 200;
       if (quantized === viewBlendCommittedRef.current) return;
@@ -210,17 +219,41 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
 
     const startTransition = (targetState: GlobeViewState) => {
       const targetBlend = targetState === "focus" ? 1 : 0;
+      const targetPov: CameraPov = targetState === "focus" ? { ...FOCUS_POV } : { ...OVERVIEW_POV };
+
+      const globe = globeRef.current;
+      const currentPov = globe?.pointOfView();
+
+      transitionFromPovRef.current = currentPov
+        ? {
+            lat: currentPov.lat,
+            lng: currentPov.lng,
+            altitude: currentPov.altitude,
+          }
+        : targetState === "focus"
+          ? { ...OVERVIEW_POV }
+          : { ...FOCUS_POV };
+
+      transitionToPovRef.current = { ...targetPov };
+      transitionFromBlendRef.current = clamp01(viewBlendRef.current.value);
+      transitionToBlendRef.current = targetBlend;
+      cameraTweenRef.current.value = 0;
+
+      if (targetState === "overview") {
+        setShowLocations(false);
+      }
 
       transitionTweenRef.current?.kill();
       isScrollControlledRef.current = true;
 
-      transitionTweenRef.current = gsap.to(viewBlendRef.current, {
-        value: targetBlend,
-        duration: 0.68,
+      transitionTweenRef.current = gsap.to(cameraTweenRef.current, {
+        value: 1,
+        duration: 1.4,
         ease: "power2.inOut",
         overwrite: true,
         onUpdate: applyBlend,
         onComplete: () => {
+          viewBlendRef.current.value = targetBlend;
           transitionTweenRef.current = null;
           viewStateRef.current = targetState;
 
@@ -241,6 +274,8 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
             return;
           }
 
+          setShowLocations(true);
+
           isScrollControlledRef.current = true;
         },
       });
@@ -255,6 +290,9 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
 
     if (transitionTweenRef.current) {
       pendingViewStateRef.current = desiredState;
+      if (desiredState === "overview") {
+        setShowLocations(false);
+      }
       return;
     }
 
