@@ -51,11 +51,11 @@ export function Footer() {
             </p>
             <div className="text-sm not-italic">
               <p className="font-semibold text-slate-200 mb-1">AFES Headquarters</p>
-              <p>Musterstrasse 12</p>
-              <p>60329 Frankfurt am Main</p>
-              <p>Germany</p>
-              <a href="mailto:info@afes.eu" className="block mt-4 text-teal-500 hover:text-teal-400 transition-colors">
-                info@afes.eu
+              <p>Neugasse 17</p>
+              <p>FL-9490 Vaduz</p>
+              <p>Liechtenstein</p>
+              <a href="mailto:info@afes-iis.com" className="block mt-4 text-teal-500 hover:text-teal-400 transition-colors">
+                info@afes-iis.com
               </a>
             </div>
           </div>

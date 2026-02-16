@@ -68,7 +68,7 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
 
   const globeMaterial = useMemo(() => {
     const material = new THREE.MeshPhongMaterial();
-    material.color = new THREE.Color("#e9f6ff");
+    material.color = new THREE.Color("#c5d4db");
     material.emissive = new THREE.Color("#edf8ff");
     material.specular = new THREE.Color("#000000");
     material.shininess = 1;

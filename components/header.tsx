@@ -100,7 +100,7 @@ export function Header() {
         {/* Desktop CTA */}
         <div className="hidden lg:flex">
           <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link href="#contact">Contact</Link>
+            <Link href="#contact">Report</Link>
           </Button>
         </div>
 
@@ -169,7 +169,7 @@ export function Header() {
             <div className="pt-4">
               <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                 <Link href="#contact" onClick={() => setMobileOpen(false)}>
-                  Contact
+                  Report
                 </Link>
               </Button>
             </div>
