@@ -1,46 +1,76 @@
 import Link from "next/link";
+import Image from "next/image";
 
-const QUICK_LINKS = [
-  { label: "Services", href: "#services" },
-  { label: "How we work", href: "#how-we-work" },
-  { label: "Branches", href: "#branches" },
+const SERVICES_LINKS = [
+  { label: "Green Card / Motor", href: "#services" },
+  { label: "General Liability", href: "#services" },
+  { label: "Recourse / Recovery", href: "#services" },
+  { label: "Audits", href: "#services" },
+];
+
+const INDUSTRIES_LINKS = [
+  { label: "Insurers", href: "/for-insurers" },
+  { label: "Fleet & Mobility", href: "/for-fleet-mobility" },
+  { label: "Leasing & Car Rental", href: "/for-leasing-rental" },
+  { label: "Social Security Carriers", href: "/for-social-security" },
+];
+
+const COMPANY_LINKS = [
+  { label: "How We Work", href: "/how-we-work" },
+  { label: "Case Studies", href: "/case-studies" },
+  { label: "About Us", href: "#" },
+  { label: "Careers", href: "#" },
   { label: "News", href: "#news" },
   { label: "Contact", href: "#contact" },
 ];
 
 const LEGAL_LINKS = [
-  { label: "Legal Notice", href: "#" },
+  { label: "Imprint", href: "#" },
   { label: "Privacy Policy", href: "#" },
   { label: "Cookie Policy", href: "#" },
 ];
 
-const BRANCHES = ["Germany", "France", "Spain", "Italy", "Netherlands", "Austria"];
-
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-foreground text-background">
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-            <span className="text-lg font-bold tracking-tight">AFES</span>
-            <p className="text-sm leading-relaxed text-background/70">
-              International Insurance Services. Cross-border claims handling
-              with local execution and centralized steering.
+    <footer className="bg-slate-950 text-slate-400 border-t border-slate-800">
+      <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-16">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <Link href="/" className="inline-block mb-6">
+              <Image
+                src="/logo.svg"
+                alt="AFES"
+                width={120}
+                height={30}
+                className="h-8 w-auto brightness-0 invert opacity-90"
+              />
+            </Link>
+            <p className="mb-6 text-sm leading-relaxed max-w-sm">
+              International Insurance Services. We handle cross-border claims with local expertise and centralized steering, ensuring compliance and efficiency across Europe.
             </p>
+            <div className="text-sm not-italic">
+              <p className="font-semibold text-slate-200 mb-1">AFES Headquarters</p>
+              <p>Musterstrasse 12</p>
+              <p>60329 Frankfurt am Main</p>
+              <p>Germany</p>
+              <a href="mailto:info@afes.eu" className="block mt-4 text-teal-500 hover:text-teal-400 transition-colors">
+                info@afes.eu
+              </a>
+            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Services */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-background/50">
-              Quick Links
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-200">
+              Services
             </h3>
-            <ul className="flex flex-col gap-2.5">
-              {QUICK_LINKS.map((link) => (
+            <ul className="space-y-3">
+              {SERVICES_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-background/70 transition-colors hover:text-background"
+                    className="text-sm hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -49,73 +79,62 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Branches */}
+          {/* Industries */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-background/50">
-              Branches
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-200">
+              For Whom
             </h3>
-            <ul className="flex flex-col gap-2.5">
-              {BRANCHES.map((branch) => (
-                <li key={branch}>
+            <ul className="space-y-3">
+              {INDUSTRIES_LINKS.map((link) => (
+                <li key={link.label}>
                   <Link
-                    href="#branches"
-                    className="text-sm text-background/70 transition-colors hover:text-background"
+                    href={link.href}
+                    className="text-sm hover:text-white transition-colors"
                   >
-                    {branch}
+                    {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Company */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-background/50">
-              Contact
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-200">
+              Company
             </h3>
-            <address className="flex flex-col gap-2.5 not-italic">
-              <p className="text-sm text-background/70">AFES Headquarters</p>
-              <p className="text-sm text-background/70">
-                Musterstrasse 12
-                <br />
-                60329 Frankfurt am Main
-                <br />
-                Germany
-              </p>
-              <a
-                href="mailto:info@afes.eu"
-                className="text-sm text-primary transition-colors hover:text-primary/80"
-              >
-                info@afes.eu
-              </a>
-              <a
-                href="tel:+496912345678"
-                className="text-sm text-background/70 transition-colors hover:text-background"
-              >
-                +49 69 123 456 78
-              </a>
-            </address>
+            <ul className="space-y-3">
+              {COMPANY_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-background/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row lg:px-8">
-          <p className="text-xs text-background/50">
-            {"© 2026 AFES International Insurance Services. All rights reserved."}
+        {/* Bottom Bar */}
+        <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-slate-500">
+            &copy; {new Date().getFullYear()} AFES Group. All rights reserved.
           </p>
-          <div className="flex gap-6">
+          <ul className="flex gap-6">
             {LEGAL_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-xs text-background/50 transition-colors hover:text-background/70"
-              >
-                {link.label}
-              </Link>
+              <li key={link.label}>
+                <Link
+                  href={link.href}
+                  className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </footer>

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NEWS_ITEMS } from "@/lib/data";
-import { FadeUp, StaggerContainer, StaggerItem } from "@/components/motion-wrapper";
+import { ScrollReveal } from "@/components/motion-wrapper";
 
 export function NewsTeaser() {
   return (
     <section className="border-b border-border bg-background py-20 lg:py-28" id="news">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <FadeUp>
+        <ScrollReveal>
           <div className="mb-12 flex items-end justify-between">
             <div className="max-w-2xl">
               <p className="mb-2 text-sm font-medium uppercase tracking-wider text-muted-foreground">
@@ -32,44 +32,46 @@ export function NewsTeaser() {
               </Link>
             </Button>
           </div>
-        </FadeUp>
+        </ScrollReveal>
 
-        <StaggerContainer className="grid gap-6 md:grid-cols-3" staggerDelay={0.06}>
+        {/* Neutral news presentation */}
+        <ScrollReveal delay={50}>
+          <div className="grid gap-6 md:grid-cols-3">
           {NEWS_ITEMS.map((item) => (
-            <StaggerItem key={item.title}>
-              <Link
-                href="#news"
-                className="group flex h-full flex-col rounded-lg border border-border bg-background p-6 transition-colors hover:bg-muted/50"
-              >
-                <div className="mb-3 flex items-center gap-3">
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <CalendarDays className="h-3.5 w-3.5" />
-                    {new Date(item.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                  {item.isNew && (
-                    <span className="rounded-sm bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
-                      New
-                    </span>
-                  )}
-                </div>
-                <h3 className="mb-2 text-base font-semibold leading-tight text-foreground">
-                  {item.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {item.teaser}
-                </p>
-                <span className="mt-4 flex items-center gap-1 text-sm text-primary opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-                  Read more
-                  <ArrowRight className="h-3.5 w-3.5" />
+            <Link
+              key={item.title}
+              href="#news"
+              className="group flex h-full flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-muted/50"
+            >
+              <div className="mb-3 flex items-center gap-3">
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  {new Date(item.date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </span>
-              </Link>
-            </StaggerItem>
+                {item.isNew && (
+                  <span className="rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-foreground">
+                    New
+                  </span>
+                )}
+              </div>
+              <h3 className="mb-2 text-base font-semibold leading-tight text-foreground">
+                {item.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {item.teaser}
+              </p>
+              <span className="mt-4 flex items-center gap-1 text-sm text-foreground opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-hover:text-primary">
+                Read more
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
           ))}
-        </StaggerContainer>
+          </div>
+        </ScrollReveal>
 
         <div className="mt-8 flex justify-center md:hidden">
           <Button variant="outline" size="sm" asChild>

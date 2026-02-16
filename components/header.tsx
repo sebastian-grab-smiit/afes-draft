@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NAV_LINKS } from "@/lib/data";
+import { SERVICES, TARGET_GROUPS } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -15,96 +16,166 @@ import {
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background">
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b transition-all duration-300",
+        scrolled
+          ? "border-border/70 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/75"
+          : "border-transparent bg-transparent"
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2" aria-label="AFES Home">
-          <span className="text-lg font-bold tracking-tight text-foreground">
-            AFES
-          </span>
+          <Image
+            src="/logo.svg"
+            alt="AFES"
+            width={120}
+            height={30}
+            priority
+            className="h-8 w-auto"
+          />
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 lg:flex">
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-6 lg:flex">
+          {/* Services Dropdown */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                Platform access
-                <ChevronDown className="h-3.5 w-3.5" />
-              </Button>
+            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-foreground/75 transition-colors hover:text-foreground focus:outline-none">
+              Services <ChevronDown className="h-4 w-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href="#platform">Insurance portal</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="#platform">End customer</Link>
-              </DropdownMenuItem>
+            <DropdownMenuContent align="start" className="w-56">
+              {SERVICES.map((service) => (
+                <DropdownMenuItem key={service.title} asChild>
+                  <Link href="#services" className="w-full cursor-pointer">
+                    {service.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" asChild>
-            <Link href="#contact">Request</Link>
+
+          {/* For Whom Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-foreground/75 transition-colors hover:text-foreground focus:outline-none">
+              For Whom <ChevronDown className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              {TARGET_GROUPS.map((group) => (
+                <DropdownMenuItem key={group.title} asChild>
+                  <Link href={group.href} className="w-full cursor-pointer">
+                    {group.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Link
+            href="/how-we-work"
+            className="text-sm font-medium text-foreground/75 transition-colors hover:text-foreground"
+          >
+            How We Work
+          </Link>
+
+          <Link
+            href="/case-studies"
+            className="text-sm font-medium text-foreground/75 transition-colors hover:text-foreground"
+          >
+            Case Studies
+          </Link>
+        </nav>
+
+        {/* Desktop CTA */}
+        <div className="hidden lg:flex">
+          <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Link href="#contact">Contact</Link>
           </Button>
         </div>
 
-        {/* Mobile toggle + CTA */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <Button size="sm" asChild>
-            <Link href="#contact">Request</Link>
-          </Button>
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground lg:hidden"
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={cn(
-          "overflow-hidden border-t border-border bg-background transition-all duration-250 ease-in-out lg:hidden",
-          mobileOpen ? "max-h-96 py-4" : "max-h-0 py-0"
-        )}
-      >
-        <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4" aria-label="Mobile navigation">
-          {NAV_LINKS.map((link) => (
+      {mobileOpen && (
+        <div className="border-t border-border bg-background lg:hidden">
+          <div className="flex flex-col space-y-4 p-4">
+            <div className="space-y-3">
+              <h4 className="font-medium text-foreground">Services</h4>
+              <div className="ml-4 flex flex-col space-y-2 border-l border-border pl-4">
+                {SERVICES.map((service) => (
+                  <Link
+                    key={service.title}
+                    href="#services"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    {service.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h4 className="font-medium text-foreground">For Whom</h4>
+              <div className="ml-4 flex flex-col space-y-2 border-l border-border pl-4">
+                {TARGET_GROUPS.map((group) => (
+                  <Link
+                    key={group.title}
+                    href={group.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    {group.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
             <Link
-              key={link.label}
-              href={link.href}
+              href="/how-we-work"
               onClick={() => setMobileOpen(false)}
-              className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="font-medium text-foreground hover:text-primary"
             >
-              {link.label}
+              How We Work
             </Link>
-          ))}
-          <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
-            <Button variant="outline" size="sm" asChild className="justify-start">
-              <Link href="#platform" onClick={() => setMobileOpen(false)}>
-                Platform access
-              </Link>
-            </Button>
+
+            <Link
+              href="/case-studies"
+              onClick={() => setMobileOpen(false)}
+              className="font-medium text-foreground hover:text-primary"
+            >
+              Case Studies
+            </Link>
+
+            <div className="pt-4">
+              <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Link href="#contact" onClick={() => setMobileOpen(false)}>
+                  Contact
+                </Link>
+              </Button>
+            </div>
           </div>
-        </nav>
-      </div>
+        </div>
+      )}
     </header>
   );
 }

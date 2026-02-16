@@ -20,7 +20,7 @@ export function NewsDrawer() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-md bg-foreground px-4 py-2.5 text-sm font-medium text-background shadow-sm transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-sm bg-foreground px-4 py-2.5 text-sm font-medium text-background shadow-sm transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         aria-label="Open news"
       >
         <Newspaper className="h-4 w-4" />
@@ -45,7 +45,7 @@ export function NewsDrawer() {
                 key={item.title}
                 href="#news"
                 onClick={() => setOpen(false)}
-                className="group flex flex-col gap-2 rounded-md border border-border p-4 transition-colors hover:bg-muted/50"
+                className="group flex flex-col gap-2 rounded-sm border border-border p-4 transition-colors hover:bg-muted/50"
               >
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -56,7 +56,7 @@ export function NewsDrawer() {
                     })}
                   </span>
                   {item.isNew && (
-                    <span className="rounded-sm bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+                    <span className="rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-foreground">
                       New
                     </span>
                   )}

@@ -1,31 +1,53 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/**
+ * AFES Enterprise Design System
+ * 
+ * Design Principles:
+ * - Professional, trustworthy appearance for insurance services
+ * - Minimal use of brand colors (reserved for CTAs and key highlights)
+ * - Subtle animations and transitions for functional feedback only
+ * - Consistent spacing based on 8px grid system
+ * - Typography optimized for information density and readability
+ */
+
 @theme inline {
+  /* Color System */
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
   --color-popover: hsl(var(--popover));
   --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  /* Brand accent - use sparingly for CTAs and key highlights only */
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
+  
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  /* Neutral colors for enterprise credibility */
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
+  
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  
+  /* Chart colors */
   --color-chart-1: hsl(var(--chart-1));
   --color-chart-2: hsl(var(--chart-2));
   --color-chart-3: hsl(var(--chart-3));
   --color-chart-4: hsl(var(--chart-4));
   --color-chart-5: hsl(var(--chart-5));
+  
+  /* Sidebar colors */
   --color-sidebar-background: hsl(var(--sidebar-background));
   --color-sidebar-foreground: hsl(var(--sidebar-foreground));
   --color-sidebar-primary: hsl(var(--sidebar-primary));
@@ -34,7 +56,11 @@
   --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  
+  /* Classic, professional font for enterprise credibility */
+  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  
+  /* Enterprise-appropriate radius (max 8px) */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -48,39 +74,85 @@
 
 @layer base {
   :root {
+    /* Base colors - clean, professional foundation */
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 222 47% 11%; /* Dark Slate */
+    
+    /* Card system */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
+    
+    /* Popover system */
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 170 44% 50%;
+    
+    /* Brand accent color #46b8a9 (Teal) - use sparingly for CTAs and key highlights only */
+    --primary: 172 45% 50%; /* #46b8a9 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 162 25% 57%;
+    
+    /* Secondary colors - Soft teals, slate/gray */
+    --secondary: 210 40% 96.1%; /* Slate 50 */
     --secondary-foreground: 222 47% 11%;
-    --muted: 210 20% 97%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 20% 97%;
+    
+    /* Muted colors for backgrounds and subtle elements */
+    --muted: 210 40% 96.1%; /* Slate 50 */
+    --muted-foreground: 215 16% 47%; /* Slate 500 */
+    
+    /* Accent colors */
+    --accent: 210 40% 96.1%; /* Slate 50 */
     --accent-foreground: 222 47% 11%;
+    
+    /* Destructive actions */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 170 44% 50%;
-    --chart-1: 170 44% 50%;
+    
+    /* Borders and inputs */
+    --border: 214.3 31.8% 91.4%; /* Slate 200 */
+    --input: 214.3 31.8% 91.4%;
+    --ring: 172 45% 50%;
+    
+    /* Chart colors for data visualization */
+    --chart-1: 172 45% 50%;
     --chart-2: 162 25% 57%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    
+    /* Border radius - enterprise-appropriate (8px max) */
+    --radius: 0.5rem; /* 8px */
+    
+    /* Sidebar colors */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 170 44% 50%;
+    --sidebar-primary: 172 45% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 170 44% 50%;
+    --sidebar-ring: 172 45% 50%;
+  }
+
+  .dark {
+    /* Dark mode overrides if needed, keeping consistent with light mode structure */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 172 45% 50%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 172 45% 50%;
   }
 }
 
@@ -88,8 +160,41 @@
   * {
     border-color: hsl(var(--border));
   }
+  
   body {
     @apply bg-background text-foreground;
+    /* Typography optimized for information density and readability */
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Improved line heights for better readability */
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: 600; /* Ensure headings are weighted correctly */
+  }
+  
+  p {
+    line-height: 1.6;
+  }
+  
+  /* Minimal shadows for enterprise credibility */
+  .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  }
+  
+  .shadow {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  }
+  
+  .shadow-md {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
   }
 }
 
@@ -97,4 +202,29 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+  
+  /* Subtle, functional transitions only */
+  .transition-smooth {
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .transition-fast {
+    transition-duration: 100ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
+
+/**
+ * Spacing System
+ * 
+ * Use consistent spacing based on 8px grid:
+ * 4px (0.5), 8px (1), 12px (1.5), 16px (2), 20px (2.5), 24px (3),
+ * 32px (4), 40px (5), 48px (6), 64px (8), 80px (10), 96px (12)
+ * 
+ * Example usage:
+ * - gap-4 (16px) for component spacing
+ * - gap-6 (24px) for section spacing
+ * - gap-8 (32px) for major section spacing
+ * - gap-12 (48px) for hero/large section spacing
+ */

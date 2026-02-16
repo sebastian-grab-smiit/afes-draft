@@ -12,89 +12,80 @@ export const TARGET_GROUPS = [
     pain: "Fragmented cross-border handling creates delays and inconsistent reserves.",
     outcome:
       "Standardized execution with centralized steering and auditable reporting.",
-    href: "#services",
+    href: "/for-insurers",
   },
   {
     title: "Fleet & Mobility",
     pain: "High case volume needs speed and predictable communication.",
     outcome: "Fast triage, clear SLAs, and structured status reporting.",
-    href: "#services",
+    href: "/for-fleet-mobility",
   },
   {
     title: "Leasing & Car Rental",
     pain: "Complex liability and recovery flows across jurisdictions.",
     outcome:
       "Clear responsibility model + recovery potential surfaced early.",
-    href: "#services",
+    href: "/for-leasing-rental",
   },
   {
     title: "Social Security Carriers",
     pain: "Cross-border recourse is slow and documentation-heavy.",
     outcome:
       "Process-driven recovery with legal support and documentation quality.",
-    href: "#services",
+    href: "/for-social-security",
   },
 ] as const;
 
 export const PROCESS_STEPS = [
   {
-    title: "Intake & triage",
-    input: "Claim notification, documents, coverage context",
-    output: "Initial assessment, next actions, expected timelines",
+    title: "Intake & Triage",
+    input: "Claim notification",
+    output: "Structured file, assigned handler",
   },
   {
-    title: "Local handling",
-    input: "Local facts, site/vehicle checks, stakeholders",
-    output: "Case progression, negotiation, documented decisions",
+    title: "Local Execution",
+    input: "Investigation",
+    output: "Verified facts, reserve estimation",
   },
   {
-    title: "Quality & legal",
-    input: "Complex liability, disputes, recovery opportunities",
-    output: "Quality checks, legal guidance, recovery potential flagged",
+    title: "Quality & Legal Control",
+    input: "Draft report",
+    output: "Compliance check, strategy alignment",
   },
   {
-    title: "Reporting & closure",
-    input: "Case data, costs, outcomes",
-    output: "Status report, reserve recommendation, closure summary",
+    title: "Centralized Reporting",
+    input: "Final data",
+    output: "Unified dashboard, settlement recommendation",
   },
 ] as const;
 
 export const SERVICES = [
   {
-    title: "Motor (TPL / Comprehensive)",
-    when: "Cross-border motor claims, high volume, strict SLAs",
-    outputs: [
-      "Consistent status reporting",
-      "Reserve recommendation",
-      "Closure documentation",
-    ],
-    typicalCases: [
-      "International accidents",
-      "Vehicle inspection coordination",
-    ],
+    title: "Green Card / Motor",
+    when: "For cross-border traffic accidents.",
+    forWhom: "Insurers, Bureaus",
+    outputs: ["Settlement within Green Card Bureau rules"],
+    typicalCases: ["International accidents", "Vehicle inspection coordination"],
   },
   {
-    title: "Liability",
-    when: "Complex liability chains and multi-party claims",
-    outputs: [
-      "Decision rationale",
-      "Negotiation trail",
-      "Quality-checked documentation",
-    ],
+    title: "General Liability",
+    when: "For complex property/injury claims.",
+    forWhom: "Insurers, Corporates",
+    outputs: ["Liability assessment & defense"],
     typicalCases: ["General liability, product/service contexts"],
   },
   {
-    title: "Recovery / Regress",
-    when: "Recourse potential must be identified early",
-    outputs: ["Recovery strategy", "Evidence pack", "Pursuit tracking"],
-    typicalCases: [
-      "Transport, travel, legal protection, debt collection",
-    ],
+    title: "Recourse / Recovery",
+    when: "For subrogation potential.",
+    forWhom: "Insurers, Fleets",
+    outputs: ["Recovered funds"],
+    typicalCases: ["Transport, travel, legal protection, debt collection"],
   },
   {
-    title: "Audits & Consulting",
-    when: "Improve quality, reserves, and operational effectiveness",
-    outputs: ["Audit findings", "Action plan", "Process recommendations"],
+    title: "Audits",
+    when: "For portfolio health checks.",
+    forWhom: "Insurers, Risk Managers",
+    outputs: ["Audit report & reserve correction"],
     typicalCases: ["Claims handling audits, reserve reviews"],
   },
 ] as const;
@@ -165,3 +156,66 @@ export const NEWS_ITEMS = [
     isNew: false,
   },
 ] as const;
+
+export const CASE_STUDIES = [
+  {
+    slug: "pan-european-fleet-consolidation",
+    title: "Pan-European Fleet Consolidation",
+    category: "Fleet & Mobility",
+    challenge:
+      "A major logistics provider with 5,000+ vehicles faced fragmented claims handling across 12 countries, leading to inconsistent data and slow recovery times.",
+    solution:
+      "AFES implemented a centralized intake portal with local execution. We standardized reporting formats and established a single point of contact for the fleet manager.",
+    result:
+      "Reduced average claims lifecycle by 30% and increased recovery rates by 15% within the first year.",
+    stats: [
+      { label: "Countries", value: "12" },
+      { label: "Vehicles", value: "5,000+" },
+      { label: "Lifecycle Reduction", value: "30%" },
+    ],
+    services: [
+      "Centralized Reporting",
+      "Green Card / Motor",
+      "Recourse / Recovery",
+    ],
+  },
+  {
+    slug: "complex-coach-liability-defense",
+    title: "Complex Coach Liability Defense",
+    category: "Liability",
+    challenge:
+      "A severe coach accident in France involving multiple nationalities and complex liability issues. The insurer needed local legal expertise and rapid fact-finding.",
+    solution:
+      "Deployed a specialized team to the scene within 24 hours. Coordinated with local authorities and medical experts to secure evidence and manage initial claimant communications.",
+    result:
+      "Successfully defended against inflated claims, saving the insurer an estimated €2.5M in potential payouts.",
+    stats: [
+      { label: "Response Time", value: "< 24h" },
+      { label: "Savings", value: "€2.5M" },
+      { label: "Claimants", value: "40+" },
+    ],
+    services: [
+      "General Liability",
+      "Local Execution",
+      "Quality & Legal Control",
+    ],
+  },
+  {
+    slug: "cross-border-social-security-recovery",
+    title: "Cross-Border Social Security Recovery",
+    category: "Social Security",
+    challenge:
+      "A national social security carrier struggled with recovering costs for medical treatment provided to tourists injured abroad. The process was manual and often time-barred.",
+    solution:
+      "Automated the identification of liable foreign insurers and streamlined the document exchange process through our partner network.",
+    result:
+      "Doubled the volume of successful recoveries and significantly reduced administrative overhead.",
+    stats: [
+      { label: "Recovery Increase", value: "100%" },
+      { label: "Admin Reduction", value: "40%" },
+      { label: "Success Rate", value: "High" },
+    ],
+    services: ["Recourse / Recovery", "Audits", "Centralized Reporting"],
+  },
+] as const;
+
