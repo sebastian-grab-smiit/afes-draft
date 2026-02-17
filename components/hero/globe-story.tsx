@@ -133,9 +133,10 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
       const entry = entries[0];
       if (!entry) return;
 
-      const side = Math.min(entry.contentRect.width, 760);
-      const width = Math.max(360, side);
-      const height = Math.max(420, Math.min(entry.contentRect.height, 760));
+      const maxByHeight = Math.max(280, Math.min(entry.contentRect.height * 0.92, 760));
+      const maxSide = Math.min(entry.contentRect.width, maxByHeight);
+      const width = Math.max(280, maxSide);
+      const height = Math.max(280, maxSide);
 
       setDimensions({ width, height });
     });
@@ -361,12 +362,12 @@ export function GlobeStory({ progress }: GlobeStoryProps) {
   }, []);
 
   return (
-    <div className="relative h-[calc(100vh-8rem)] min-h-[520px] w-full">
+    <div className="relative h-full min-h-0 w-full">
       <div
         ref={globeWrapRef}
-        className="mx-auto flex h-[80vh] min-h-[560px] w-full max-w-[48rem] items-start justify-center"
+        className="mx-auto flex h-full min-h-0 w-full max-w-[48rem] items-center justify-center"
       >
-        <div className="relative h-full w-full overflow-visible">
+        <div className="relative flex h-full w-full items-center justify-center overflow-visible">
           {isMounted && (
             <Globe
               ref={globeRef}

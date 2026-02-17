@@ -213,10 +213,10 @@ export function Hero({
       />
 
       <div
-        className="relative z-10 mx-auto flex h-full w-full max-w-[94rem] items-center px-4 py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-6"
+        className="relative z-10 mx-auto flex h-full w-full max-w-[94rem] items-center px-4 py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-6 [@media(max-height:860px)]:py-2"
         style={{ pointerEvents: heroColumnsOpacity > 0.02 ? "auto" : "none" }}
       >
-        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-18 mb-10 [@media(max-height:860px)]:mb-2">
+        <div className="grid h-full min-h-0 w-full items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-18 [@media(max-height:860px)]:gap-4 [@media(max-height:720px)]:gap-2">
           {/* Left Column: Content */}
           <div
             className="flex h-full max-w-[42rem] flex-col justify-center"
@@ -227,7 +227,7 @@ export function Hero({
               transition: "opacity 1760ms cubic-bezier(0.22, 1, 0.36, 1), transform 1980ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           >
-            <div className="grid min-h-[23rem] lg:min-h-[25rem] [@media(max-height:860px)]:min-h-[16rem] [@media(max-height:720px)]:min-h-[12rem]">
+            <div className="grid min-h-[23rem] lg:min-h-[25rem] [@media(max-height:860px)]:min-h-[16rem] [@media(max-height:720px)]:min-h-[10rem]">
               <div
                 className="col-start-1 row-start-1"
                 style={{
@@ -237,26 +237,35 @@ export function Hero({
                   transition: "opacity 1700ms cubic-bezier(0.22, 1, 0.36, 1), transform 1920ms cubic-bezier(0.22, 1, 0.36, 1)",
                 }}
               >
-                <h1 className="text-balance text-[clamp(2rem,5vw,4rem)] font-bold leading-tight tracking-tight text-foreground">
+                <h1 className="text-balance text-[clamp(1.65rem,min(4.7vw,7.3vh),3.85rem)] font-bold leading-[1.06] tracking-tight text-foreground [@media(max-height:860px)]:text-[clamp(1.4rem,min(4vw,6.2vh),3rem)] [@media(max-height:720px)]:text-[clamp(1.2rem,min(3.2vw,5.2vh),2.2rem)]">
                   {headline}
                 </h1>
 
-                <p className="mt-6 max-w-xl text-[clamp(1rem,1.6vw,1.25rem)] leading-relaxed text-muted-foreground">
+                <p className="mt-6 max-w-xl text-[clamp(0.95rem,min(1.45vw,2.6vh),1.2rem)] leading-relaxed text-muted-foreground [@media(max-height:860px)]:mt-4 [@media(max-height:860px)]:text-[0.95rem] [@media(max-height:720px)]:mt-3 [@media(max-height:720px)]:text-[0.86rem] [@media(max-height:720px)]:leading-snug">
                   {subline}
                 </p>
               </div>
             </div>
 
             <FadeIn delay={0.2}>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+              <div className="mt-10 flex flex-wrap gap-4 [@media(max-height:860px)]:mt-6 [@media(max-height:720px)]:mt-4 [@media(max-height:720px)]:gap-2">
+                <Button
+                  size="lg"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 [@media(max-height:860px)]:h-10 [@media(max-height:860px)]:px-5 [@media(max-height:860px)]:text-sm [@media(max-height:720px)]:h-9 [@media(max-height:720px)]:px-4 [@media(max-height:720px)]:text-xs"
+                  asChild
+                >
                   <Link href={primaryCta.href} onClick={handlePrimaryCtaClick}>
                     {primaryCta.text}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 {secondaryCta && (
-                  <Button size="lg" variant="outline" asChild>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="[@media(max-height:860px)]:h-10 [@media(max-height:860px)]:px-5 [@media(max-height:860px)]:text-sm [@media(max-height:720px)]:h-9 [@media(max-height:720px)]:px-4 [@media(max-height:720px)]:text-xs"
+                    asChild
+                  >
                     <Link
                       href={secondaryCta.href}
                       onClick={handleWhyAfesClick}
@@ -271,10 +280,10 @@ export function Hero({
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4 [@media(max-height:860px)]:mt-8 [@media(max-height:720px)]:mt-5">
+              <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4 [@media(max-height:860px)]:mt-6 [@media(max-height:860px)]:gap-x-6 [@media(max-height:720px)]:mt-4 [@media(max-height:720px)]:gap-x-4 [@media(max-height:720px)]:gap-y-2 [@media(max-height:660px)]:hidden">
                 {PROOF_POINTS.map((point) => (
-                  <div key={point.text} className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <point.icon className="h-5 w-5 text-primary" />
+                  <div key={point.text} className="flex items-center gap-2 text-sm font-medium text-muted-foreground [@media(max-height:720px)]:text-xs">
+                    <point.icon className="h-5 w-5 text-primary [@media(max-height:720px)]:h-4 [@media(max-height:720px)]:w-4" />
                     <span>{point.text}</span>
                   </div>
                 ))}
@@ -284,7 +293,7 @@ export function Hero({
 
           {/* Right Column: Globe Story */}
           <div
-            className="relative hidden h-full lg:flex lg:items-start lg:justify-center lg:pt-6 xl:pt-22 [@media(max-height:860px)]:pt-0"
+            className="relative hidden h-full lg:flex lg:items-center lg:justify-center lg:pt-0"
             style={{
               opacity: heroColumnsOpacity,
               transform: `translateX(${rightExitTranslateX}px)`,
@@ -292,7 +301,7 @@ export function Hero({
               transition: "opacity 1760ms cubic-bezier(0.22, 1, 0.36, 1), transform 1920ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           >
-            <FadeIn delay={0.2} className="w-full">
+            <FadeIn delay={0.2} className="flex h-full w-full items-center justify-center [@media(max-height:860px)]:scale-[0.9] [@media(max-height:720px)]:scale-[0.78] [@media(max-height:660px)]:scale-[0.68]">
               <GlobeStory progress={storyProgress} />
             </FadeIn>
           </div>
