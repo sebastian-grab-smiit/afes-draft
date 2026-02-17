@@ -40,12 +40,12 @@ export const PROCESS_STEPS = [
   {
     title: "Intake & Triage",
     input: "Claim notification",
-    output: "Structured file, assigned handler",
+    output: "Structured file, assignment to handler",
   },
   {
     title: "Local Execution",
     input: "Investigation",
-    output: "Verified facts, reserve estimation",
+    output: "Verified facts, reserve estimation, local experience",
   },
   {
     title: "Quality & Legal Control",

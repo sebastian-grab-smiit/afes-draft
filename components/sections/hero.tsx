@@ -8,11 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/motion-wrapper";
 import { GlobeStory } from "@/components/hero/globe-story";
-import { ProblemPain } from "@/components/hero/problem-pain";
-
-function clamp01(value: number) {
-  return Math.min(1, Math.max(0, value));
-}
+import { HowWeWork } from "@/components/sections/how-we-work";
 
 const PROOF_POINTS = [
   { icon: ShieldCheck, text: "50+ years experience" },
@@ -52,14 +48,20 @@ export function Hero({
   const progressTargetRef = useRef(0);
   const progressRafRef = useRef<number | null>(null);
   const progressCommittedRef = useRef(0);
+  // Reveal-/Globe-Strecke bewusst konstant halten, obwohl der nachgelagerte Hold verlängert wird.
+  const revealDistanceDesktopVh = 135;
+  const revealDistanceMobileVh = 126;
+  const totalPinnedDistanceDesktopVh = 190;
+  const totalPinnedDistanceMobileVh = 180;
 
-  const exitStart = 0.84;
-  const exitEnd = 0.98;
-  const exitTransition = clamp01((storyProgress - exitStart) / (exitEnd - exitStart));
+  const sectionSnapThreshold = 0.95;
+  const sectionState = storyProgress >= sectionSnapThreshold ? 1 : 0;
 
-  const revealStart = 0.9;
-  const revealEnd = 1;
-  const revealTransition = clamp01((storyProgress - revealStart) / (revealEnd - revealStart));
+  // Zwei feste Zustände (Hero / HowWeWork) mit weicher CSS-Transition dazwischen.
+  // Die Globe-interne Progress-Logik bleibt unverändert, da storyProgress weiter
+  // direkt an GlobeStory übergeben wird.
+  const exitTransition = sectionState;
+  const revealTransition = sectionState;
 
   const leftExitTranslateX = -220 * exitTransition;
   const rightExitTranslateX = 220 * exitTransition;
@@ -83,12 +85,20 @@ export function Hero({
     const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: "top top+=64",
-      end: () => (window.innerWidth >= 1024 ? "+=90%" : "+=80%"),
+      end: () => (window.innerWidth >= 1024 ? `+=${totalPinnedDistanceDesktopVh}%` : `+=${totalPinnedDistanceMobileVh}%`),
       pin: true,
       scrub: 0.6,
       anticipatePin: 1,
       onUpdate: (self) => {
-        progressTargetRef.current = self.progress;
+        // Nach dem vollständigen Reveal (HowWeWork sichtbar) bleibt der Progress
+        // kurz auf 1 stehen. Dadurch entsteht der gewünschte Blocker zwischen
+        // HowWeWork und dem nächsten Section-Übergang.
+        const revealProgressLimit =
+          window.innerWidth >= 1024
+            ? revealDistanceDesktopVh / totalPinnedDistanceDesktopVh
+            : revealDistanceMobileVh / totalPinnedDistanceMobileVh;
+        const normalizedProgress = self.progress <= revealProgressLimit ? self.progress / revealProgressLimit : 1;
+        progressTargetRef.current = normalizedProgress;
 
         if (progressRafRef.current !== null) return;
 
@@ -121,11 +131,11 @@ export function Hero({
           opacity: problemLayerOpacity,
           transform: `translateY(${problemLayerTranslateY}px) scale(${problemLayerScale})`,
           pointerEvents: problemLayerOpacity > 0.55 ? "auto" : "none",
-          transition: "opacity 320ms ease-out, transform 380ms ease-out",
+          transition: "opacity 1820ms cubic-bezier(0.22, 1, 0.36, 1), transform 1980ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         <div className="h-full w-full max-w-[94rem]">
-          <ProblemPain embedded />
+          <HowWeWork embedded />
         </div>
       </div>
 
@@ -144,7 +154,7 @@ export function Hero({
               opacity: heroColumnsOpacity,
               transform: `translateX(${leftExitTranslateX}px)`,
               pointerEvents: heroColumnsOpacity > 0.02 ? "auto" : "none",
-              transition: "opacity 260ms ease-out, transform 340ms ease-out",
+              transition: "opacity 1760ms cubic-bezier(0.22, 1, 0.36, 1), transform 1980ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           >
             <div className="grid min-h-[23rem] lg:min-h-[25rem]">
@@ -154,7 +164,7 @@ export function Hero({
                   opacity: heroColumnsOpacity,
                   transform: `translateX(${Math.max(0, leftExitTranslateX * 0.3)}px)`,
                   pointerEvents: heroColumnsOpacity > 0.01 ? "auto" : "none",
-                  transition: "opacity 220ms ease-out, transform 300ms ease-out",
+                  transition: "opacity 1700ms cubic-bezier(0.22, 1, 0.36, 1), transform 1920ms cubic-bezier(0.22, 1, 0.36, 1)",
                 }}
               >
                 <h1 className="text-balance text-[clamp(2rem,5vw,4rem)] font-bold leading-tight tracking-tight text-foreground">
@@ -204,7 +214,7 @@ export function Hero({
               opacity: heroColumnsOpacity,
               transform: `translateX(${rightExitTranslateX}px)`,
               pointerEvents: heroColumnsOpacity > 0.02 ? "auto" : "none",
-              transition: "opacity 260ms ease-out, transform 360ms ease-out",
+              transition: "opacity 1760ms cubic-bezier(0.22, 1, 0.36, 1), transform 1920ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           >
             <FadeIn delay={0.2} className="w-full">

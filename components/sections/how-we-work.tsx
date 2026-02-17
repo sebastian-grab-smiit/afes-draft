@@ -6,9 +6,19 @@ import { Button } from "@/components/ui/button";
 import { PROCESS_STEPS } from "@/lib/data";
 import { ScrollReveal } from "@/components/motion-wrapper";
 
-export function HowWeWork() {
+interface HowWeWorkProps {
+  embedded?: boolean;
+}
+
+export function HowWeWork({ embedded = false }: HowWeWorkProps) {
   return (
-    <section className="border-t border-border bg-background py-24 lg:py-32" id="how-we-work">
+    <section 
+      className={embedded 
+        ? "h-full overflow-y-auto bg-background py-24 lg:py-32" 
+        : "border-t border-border bg-background py-24 lg:py-32"
+      } 
+      id="how-we-work"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <ScrollReveal>
           <div className="mb-16 max-w-2xl">

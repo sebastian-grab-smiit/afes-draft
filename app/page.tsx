@@ -15,7 +15,7 @@ export default function Page() {
       <Header />
       <main>
         <Hero />
-        <HowWeWork />
+        {/* <HowWeWork /> */}
         <ServicesOverview />
         <Proof />
         <NewsTeaser />
