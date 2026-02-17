@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 
 const PROOF_POINTS = [
   { icon: SearchX, text: "Page not available" },
-  { icon: Home, text: "Return to homepage" },
 ];
 
 export default function NotFound() {
