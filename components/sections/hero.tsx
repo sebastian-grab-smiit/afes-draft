@@ -181,7 +181,10 @@ export function Hero({
         style={{ opacity: shellOpacity }}
       />
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-[94rem] items-center px-4 py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-6">
+      <div
+        className="relative z-10 mx-auto flex h-full w-full max-w-[94rem] items-center px-4 py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-6"
+        style={{ pointerEvents: heroColumnsOpacity > 0.02 ? "auto" : "none" }}
+      >
         <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-18 mb-10">
           {/* Left Column: Content */}
           <div

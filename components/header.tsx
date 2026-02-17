@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SERVICES, TARGET_GROUPS } from "@/lib/data";
@@ -15,10 +16,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function Header() {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [targetGroupsOpen, setTargetGroupsOpen] = useState(false);
+
+  function handleLogoClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    setMobileOpen(false);
+
+    if (window.location.pathname !== "/") {
+      router.push("/");
+      window.setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 40);
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +56,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2" aria-label="AFES Home">
+        <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2" aria-label="AFES Home">
           <Image
             src="/logo.svg"
             alt="AFES"
@@ -64,7 +81,7 @@ export function Header() {
               <DropdownMenuContent align="start" className="w-56">
                 {SERVICES.map((service) => (
                   <DropdownMenuItem key={service.title} asChild>
-                    <Link href="#services" className="w-full cursor-pointer">
+                    <Link href="/services" className="w-full cursor-pointer">
                       {service.title}
                     </Link>
                   </DropdownMenuItem>
