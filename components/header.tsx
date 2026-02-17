@@ -129,7 +129,7 @@ export function Header() {
         {/* Desktop CTA */}
         <div className="hidden lg:flex">
           <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link href="#contact">Report a claim</Link>
+            <Link href="/report">Report a claim</Link>
           </Button>
         </div>
 
@@ -148,7 +148,7 @@ export function Header() {
         <div className="border-t border-border bg-background lg:hidden">
           <div className="flex flex-col space-y-4 p-4">
             <div className="space-y-3">
-              <h4 className="font-medium text-foreground">Services</h4>
+              <div className="text-sm font-medium text-foreground">Services</div>
               <div className="ml-4 flex flex-col space-y-2 border-l border-border pl-4">
                 {SERVICES.map((service) => (
                   <Link
@@ -164,7 +164,7 @@ export function Header() {
             </div>
 
             <div className="space-y-3">
-              <h4 className="font-medium text-foreground">For Whom</h4>
+              <div className="text-sm font-medium text-foreground">For Whom</div>
               <div className="ml-4 flex flex-col space-y-2 border-l border-border pl-4">
                 {TARGET_GROUPS.map((group) => (
                   <Link
@@ -182,7 +182,7 @@ export function Header() {
             <Link
               href="/how-we-work"
               onClick={() => setMobileOpen(false)}
-              className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
+              className="text-sm font-normal text-foreground transition-colors hover:text-foreground"
             >
               How We Work
             </Link>
@@ -190,14 +190,14 @@ export function Header() {
             <Link
               href="/case-studies"
               onClick={() => setMobileOpen(false)}
-              className="text-sm font-normal text-foreground/80 transition-colors hover:text-foreground"
+              className="text-sm font-normal text-foreground transition-colors hover:text-foreground"
             >
               Case Studies
             </Link>
 
             <div className="pt-4">
               <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link href="#contact" onClick={() => setMobileOpen(false)}>
+                <Link href="/report" onClick={() => setMobileOpen(false)}>
                   Report a claim
                 </Link>
               </Button>
