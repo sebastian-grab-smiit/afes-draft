@@ -73,6 +73,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   :root {
     /* Base colors - clean, professional foundation */
     --background: 0 0% 100%;

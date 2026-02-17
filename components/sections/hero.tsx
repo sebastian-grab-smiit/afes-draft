@@ -40,10 +40,11 @@ export function Hero({
   ),
   subline = "Accelerate cycle times, ensure full transparency, and maintain consistent reporting across all jurisdictions.",
   primaryCta = { text: "Request Consultation", href: "#contact" },
-  secondaryCta = { text: "Why AFES", href: "/#how-we-work" },
+  secondaryCta = { text: "Why AFES", href: "#hero-how-we-work" },
   backgroundImage,
 }: HeroProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const sectionTriggerRef = useRef<ScrollTrigger | null>(null);
   const [storyProgress, setStoryProgress] = useState(0);
   const progressTargetRef = useRef(0);
   const progressRafRef = useRef<number | null>(null);
@@ -70,6 +71,38 @@ export function Hero({
   const problemLayerOpacity = revealTransition;
   const problemLayerTranslateY = 42 * (1 - revealTransition);
   const problemLayerScale = 0.97 + 0.03 * revealTransition;
+
+  function handleWhyAfesClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (secondaryCta?.href !== "#hero-how-we-work") return;
+
+    event.preventDefault();
+
+    const trigger = sectionTriggerRef.current;
+    if (!trigger) return;
+
+    const revealProgressLimit =
+      window.innerWidth >= 1024
+        ? revealDistanceDesktopVh / totalPinnedDistanceDesktopVh
+        : revealDistanceMobileVh / totalPinnedDistanceMobileVh;
+
+    // Direkter Zielpunkt auf der Trigger-Timeline statt fixem Pixel-Delta:
+    // so landet der Klick reproduzierbar im HowWeWork-Snap-Zustand.
+    const targetTriggerProgress = Math.min(1, sectionSnapThreshold * revealProgressLimit + 0.01);
+    const targetScrollY = trigger.start + (trigger.end - trigger.start) * targetTriggerProgress;
+
+    window.scrollTo({ top: targetScrollY, behavior: "smooth" });
+  }
+
+  function handlePrimaryCtaClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (primaryCta.href !== "#contact") return;
+
+    event.preventDefault();
+
+    const contactSection = document.getElementById("contact");
+    if (!contactSection) return;
+
+    contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -115,16 +148,19 @@ export function Hero({
       },
     });
 
+    sectionTriggerRef.current = trigger;
+
     return () => {
       if (progressRafRef.current !== null) {
         cancelAnimationFrame(progressRafRef.current);
       }
+      sectionTriggerRef.current = null;
       trigger.kill();
     };
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative h-[calc(100dvh-4rem)] min-h-[calc(100svh-4rem)] border-b border-border bg-background overflow-hidden">
+    <section id="hero-how-we-work" ref={sectionRef} className="relative h-[calc(100dvh-4rem)] min-h-[calc(100svh-4rem)] border-b border-border bg-background overflow-hidden">
       <div
         className="absolute inset-0 z-0 flex items-center justify-center px-4 lg:px-8 xl:px-10"
         style={{
@@ -180,14 +216,19 @@ export function Hero({
             <FadeIn delay={0.2}>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-                  <Link href={primaryCta.href}>
+                  <Link href={primaryCta.href} onClick={handlePrimaryCtaClick}>
                     {primaryCta.text}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 {secondaryCta && (
                   <Button size="lg" variant="outline" asChild>
-                    <Link href={secondaryCta.href} target={secondaryCta.href.startsWith("http") ? "_blank" : undefined} rel={secondaryCta.href.startsWith("http") ? "noopener noreferrer" : undefined}>
+                    <Link
+                      href={secondaryCta.href}
+                      onClick={handleWhyAfesClick}
+                      target={secondaryCta.href.startsWith("http") ? "_blank" : undefined}
+                      rel={secondaryCta.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    >
                       {secondaryCta.text}
                     </Link>
                   </Button>
