@@ -43,6 +43,7 @@ export function Hero({
   secondaryCta = { text: "Why AFES", href: "#hero-how-we-work" },
   backgroundImage,
 }: HeroProps) {
+  const [headerOffset, setHeaderOffset] = useState(64);
   const sectionRef = useRef<HTMLElement | null>(null);
   const sectionTriggerRef = useRef<ScrollTrigger | null>(null);
   const [storyProgress, setStoryProgress] = useState(0);
@@ -105,6 +106,27 @@ export function Hero({
   }
 
   useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+
+    const updateHeaderOffset = () => {
+      const next = Math.round(header.getBoundingClientRect().height);
+      setHeaderOffset(next > 0 ? next : 64);
+    };
+
+    updateHeaderOffset();
+
+    const observer = new ResizeObserver(updateHeaderOffset);
+    observer.observe(header);
+    window.addEventListener("resize", updateHeaderOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateHeaderOffset);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!sectionRef.current) return;
 
     gsap.registerPlugin(ScrollTrigger);
@@ -117,11 +139,12 @@ export function Hero({
 
     const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: "top top+=64",
+      start: () => `top top+=${headerOffset}`,
       end: () => (window.innerWidth >= 1024 ? `+=${totalPinnedDistanceDesktopVh}%` : `+=${totalPinnedDistanceMobileVh}%`),
       pin: true,
       scrub: 0.6,
       anticipatePin: 1,
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
         // Nach dem vollständigen Reveal (HowWeWork sichtbar) bleibt der Progress
         // kurz auf 1 stehen. Dadurch entsteht der gewünschte Blocker zwischen
@@ -157,10 +180,18 @@ export function Hero({
       sectionTriggerRef.current = null;
       trigger.kill();
     };
-  }, []);
+  }, [headerOffset]);
 
   return (
-    <section id="hero-how-we-work" ref={sectionRef} className="relative h-[calc(100dvh-4rem)] min-h-[calc(100svh-4rem)] border-b border-border bg-background overflow-hidden">
+    <section
+      id="hero-how-we-work"
+      ref={sectionRef}
+      className="relative border-b border-border bg-background overflow-hidden"
+      style={{
+        height: `calc(100dvh - ${headerOffset}px)`,
+        minHeight: `calc(100svh - ${headerOffset}px)`,
+      }}
+    >
       <div
         className="absolute inset-0 z-0 flex items-center justify-center px-4 lg:px-8 xl:px-10"
         style={{
@@ -185,7 +216,7 @@ export function Hero({
         className="relative z-10 mx-auto flex h-full w-full max-w-[94rem] items-center px-4 py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-6"
         style={{ pointerEvents: heroColumnsOpacity > 0.02 ? "auto" : "none" }}
       >
-        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-18 mb-10">
+        <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-18 mb-10 [@media(max-height:860px)]:mb-2">
           {/* Left Column: Content */}
           <div
             className="flex h-full max-w-[42rem] flex-col justify-center"
@@ -196,7 +227,7 @@ export function Hero({
               transition: "opacity 1760ms cubic-bezier(0.22, 1, 0.36, 1), transform 1980ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           >
-            <div className="grid min-h-[23rem] lg:min-h-[25rem]">
+            <div className="grid min-h-[23rem] lg:min-h-[25rem] [@media(max-height:860px)]:min-h-[16rem] [@media(max-height:720px)]:min-h-[12rem]">
               <div
                 className="col-start-1 row-start-1"
                 style={{
@@ -240,7 +271,7 @@ export function Hero({
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4">
+              <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4 [@media(max-height:860px)]:mt-8 [@media(max-height:720px)]:mt-5">
                 {PROOF_POINTS.map((point) => (
                   <div key={point.text} className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                     <point.icon className="h-5 w-5 text-primary" />
@@ -253,7 +284,7 @@ export function Hero({
 
           {/* Right Column: Globe Story */}
           <div
-            className="relative hidden h-full lg:flex lg:items-start lg:justify-center lg:pt-6 xl:pt-22"
+            className="relative hidden h-full lg:flex lg:items-start lg:justify-center lg:pt-6 xl:pt-22 [@media(max-height:860px)]:pt-0"
             style={{
               opacity: heroColumnsOpacity,
               transform: `translateX(${rightExitTranslateX}px)`,
