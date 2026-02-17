@@ -14,12 +14,16 @@ export function HowWeWork({ embedded = false }: HowWeWorkProps) {
   return (
     <section 
       className={embedded 
-        ? "h-full overflow-y-auto bg-background py-24 lg:py-32" 
+        ? "h-full overflow-y-auto bg-background" 
         : "border-t border-border bg-background py-24 lg:py-32"
       } 
       id="how-we-work"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div
+        className={`mx-auto max-w-7xl px-6 lg:px-8 ${
+          embedded ? "flex min-h-full flex-col justify-center py-12 lg:py-16" : ""
+        }`}
+      >
         <ScrollReveal>
           <div className="mb-16 max-w-2xl">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
