@@ -66,9 +66,10 @@ export function NotFoundGlobe() {
       const entry = entries[0];
       if (!entry) return;
 
-      const side = Math.min(entry.contentRect.width, 820);
-      const width = Math.max(420, side);
-      const height = Math.max(460, Math.min(entry.contentRect.height, 820));
+      const maxByHeight = Math.max(260, Math.min(entry.contentRect.height * 0.92, 820));
+      const maxSide = Math.min(entry.contentRect.width, maxByHeight);
+      const width = Math.max(260, maxSide);
+      const height = Math.max(260, maxSide);
 
       setDimensions({ width, height });
     });
@@ -135,9 +136,9 @@ export function NotFoundGlobe() {
   }, []);
 
   return (
-    <div className="relative h-[calc(100vh-8rem)] min-h-[520px] w-full">
-      <div ref={globeWrapRef} className="mx-auto flex h-[82vh] min-h-[560px] w-full max-w-[52rem] items-start justify-center">
-        <div className="relative h-full w-full overflow-visible">
+    <div className="relative h-full min-h-0 w-full">
+      <div ref={globeWrapRef} className="mx-auto flex h-full min-h-0 w-full max-w-[52rem] items-center justify-center">
+        <div className="relative flex h-full w-full items-center justify-center overflow-visible">
           {isMounted && (
             <Globe
               ref={globeRef}
